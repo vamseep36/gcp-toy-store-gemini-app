@@ -1,7 +1,5 @@
 package cloudcode.helloworld.web;
 
-
-
 import com.google.api.gax.rpc.ApiException;
 import com.google.cloud.aiplatform.v1.EndpointName;
 import com.google.cloud.aiplatform.v1.PredictResponse;
@@ -19,15 +17,16 @@ import java.util.Map;
 public class GenerateToy {
   static String bytesBase64Encoded = "";
   static String bytesBase64EncodedOuput = "";
-    public static void main(String[] args) throws IOException {
+    
+  public static void main(String[] args) throws IOException {
       String projectId = "";
       String location = "us-central1";
       String prompt = "";
      // generateImage(projectId, location, prompt);
     }
   
-    // Generate an image using a text prompt using an Imagen model
-    public String generateImage(String projectId, String location, String prompt)
+  // Generate an image using a text prompt using an Imagen model
+  public String generateImage(String projectId, String location, String prompt)
         throws ApiException, IOException {
       final String endpoint = String.format("%s-aiplatform.googleapis.com:443", location);
       PredictionServiceSettings predictionServiceSettings =
@@ -57,7 +56,7 @@ public class GenerateToy {
         paramsMap.put("sampleCount", 1);
         paramsMap.put("aspectRatio", "1:1");
         paramsMap.put("safetyFilterLevel", "block_few");
-        paramsMap.put("personGeneration", "allow_adult");
+        // paramsMap.put("personGeneration", "allow_adult");
         paramsMap.put("guidanceScale", 21);
         
       paramsMap.put("imagenControlScale", 0.95); //Setting imagenControlScale
