@@ -46,6 +46,22 @@ We are using cloud run functions. They are two services.
 2. toolbox-toys - It is the microservice used to predict the price of the custom created toy by employing the Vector Search matches approach.
 
 # Instructions to deploy
+
+# Prerequisites
+
+# Enable APIs
+
+```bash
+gcloud services enable  alloydb.googleapis.com \
+  compute.googleapis.com \
+  cloudresourcemanager.googleapis.com \
+  servicenetworking.googleapis.com \
+  run.googleapis.com \
+  cloudbuild.googleapis.com \
+  cloudfunctions.googleapis.com \
+  aiplatform.googleapis.com
+```
+
 Create a cluster and instance
 Navigate the AlloyDB page in the Cloud Console. Click on CREATE CLUSTER from that page:
 <img src="https://codelabs.developers.google.com/static/toy-store-app/img/f76ff480c8c889aa_1920.png"/>
