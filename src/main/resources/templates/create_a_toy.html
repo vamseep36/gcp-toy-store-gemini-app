@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Toy Paradise - Generate Your Toy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f0e3;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #wrapper {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            width: 95%;
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #3498db;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2em;
+            color: #3498db;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #prompt-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        textarea {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1em;
+            resize: vertical;
+            /* Allows vertical resizing */
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            font-family: 'Roboto', sans-serif;
+            /* Ensures font consistency */
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 10px #3498db1a;
+        }
+
+        #generate-button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background-color: #3498db;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            align-self: center;
+            /* Centers the button */
+        }
+
+        #generate-button:hover {
+            background-color: #2980b9;
+        }
+
+        #generate-button:active {
+            transform: scale(0.98);
+        }
+
+        #generated-image {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            /* Distribute buttons evenly */
+            margin-top: 20px;
+            width: 100%;
+            /* Make sure it takes the full width of the wrapper */
+        }
+
+        .back-button {
+
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            color: #555;
+            display: inline-block;
+            text-align: center;
+            width: 30%;
+            /* Assign equal width */
+            box-sizing: border-box;
+            /* Include padding and border in the element's total width */
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+
+        #spinner {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        #spinner.loading {
+            display: flex;
+        }
+
+        .loading-spinner {
+            border: 10px solid #f3f3f3;
+            border-top: 10px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .quantity-controls button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        .quantity-controls button:hover {
+            background-color: #2980b9;
+        }
+
+        .quantity-controls span {
+            font-size: 1.2em;
+            margin: 0 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            #wrapper {
+                padding: 15px;
+                margin: 10px auto;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <h1>Toy Paradise</h1>
+        <h2>Custom Design Your Toy!</h2>
+
+        <div id="prompt-container">
+            <label for="toy-prompt">Describe the toy you want to create:</label>
+            <textarea id="toy-prompt" placeholder="A teddy bear wearing a superhero cape..."></textarea>
+        </div>
+
+        <form id="formgenerate" name="formgenerate" action="#" th:action="@{/generate}" th:object="${toy}" method="post"
+            enctype="multipart/form-data">
+
+            <input type="hidden" th:field="*{description}" id="hiddentoydescription">
+
+        </form>
+
+
+
+        <div class="button-container">
+            <a class="back-button" onclick="generateToy()">Create Your Toy</a>
+            <a href="/" class="back-button">Back to Toy List</a>
+        </div>
+
+        <div th:if="${imagestring != null and imagestring != ''}">
+            <img id="generated-image" th:src="${imagestring}" alt="Generated Image"
+                style="max-width: 100%; height: auto;" />
+            <div th:if="${pricePredict != null and pricePredict != ''}">
+                <b>
+                    <p class="price" th:text="${pricePredict}"></p>
+                </b>
+            </div>
+
+            <div class="quantity-controls">
+                <button onclick="decrementQuantity()">-</button>
+                <span id="quantity">1</span>
+                <button onclick="incrementQuantity()">+</button>
+            </div>
+            <div class="button-container">
+                <a href="/" class="back-button" onclick="alert('Added to Cart!')">Add to Cart</a>
+            </div>
+
+        </div>
+
+
+
+
+        <div id="spinner">
+            <div class="loading-spinner"></div>
+        </div>
+
+
+
+    </div>
+
+    <script>
+        function generateToy() {
+            const promptText = document.getElementById('toy-prompt').value;
+            // alert(promptText);
+            document.getElementById('hiddentoydescription').value = promptText.trim();
+
+            const spinner = document.getElementById('spinner');
+
+            // Display loading spinner
+            spinner.classList.add('loading');
+
+            // Basic input validation
+            if (!promptText.trim()) {
+                alert("Please enter a description for the toy.");
+                spinner.classList.remove('loading'); // Hide spinner
+                return;
+            }
+
+
+            document.getElementById('formgenerate').submit();
+
+        }
+
+        let quantity = 1;
+
+        function incrementQuantity() {
+            quantity++;
+            document.getElementById('quantity').textContent = quantity;
+        }
+
+        function decrementQuantity() {
+            if (quantity > 1) {
+                quantity--;
+                document.getElementById('quantity').textContent = quantity;
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+sources:
+    alloydb-toys:
+        kind: "alloydb-postgres"
+        project: "YOUR_PROJECT_ID"
+        region: "us-central1"
+        cluster: "vector-cluster"
+        instance: "vector-instance"
+        database: "postgres"
+        user: "postgres"
+        password: "alloydb"
+        #ipType: "private"
+
+tools:
+  get-toy-price:
+    kind: postgres-sql
+    source: alloydb-toys
+    description: Get the price of a toy based on a description.
+    parameters:
+      - name: description
+        type: string
+        description: A description of the toy to search for.
+    statement: |
+      SELECT price FROM toys
+      ORDER BY text_embeddings <=> CAST(embedding('text-embedding-005', $1) AS vector(768))
+      LIMIT 1;

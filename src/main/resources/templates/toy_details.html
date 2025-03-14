@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${toy.name}">Toy Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f0e3;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #wrapper {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            width: 95%;
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #3498db;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .toy-image {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            object-fit: contain;
+        }
+
+        .toy-description {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .price {
+            font-size: 1.5em;
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .quantity-controls button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        .quantity-controls button:hover {
+            background-color: #2980b9;
+        }
+
+        .quantity-controls span {
+            font-size: 1.2em;
+            margin: 0 10px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-around;
+            /* Distribute buttons evenly */
+            margin-top: 20px;
+            width: 100%;
+            /* Make sure it takes the full width of the wrapper */
+        }
+
+
+        .back-button {
+
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            color: #555;
+            display: inline-block;
+            text-align: center;
+            width: 30%;
+            /* Assign equal width */
+            box-sizing: border-box;
+            /* Include padding and border in the element's total width */
+
+        }
+
+        .back-button:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+
+<body>
+    <form id="formcart" name="formprompt" action="#" th:action="@{/morelikethis}" th:object="${toy}" method="post"
+        enctype="multipart/form-data">
+        <div id="wrapper">
+            <h1 th:text="${toy.description}"></h1>
+            <img class="toy-image" th:src="${toy.imageURL}" alt="Toy Image" />
+            <p id="description" class="toy-description" th:text="${toy.description}"></p>
+            <input type="hidden" th:field="*{description}" id="hiddendescription">
+            <p class="price">Price: $<span th:text="${toy.price}"></span></p>
+            <div class="quantity-controls">
+                <button onclick="decrementQuantity()">-</button>
+                <span id="quantity">1</span>
+                <button onclick="incrementQuantity()">+</button>
+            </div>
+            <div class="button-container">
+                <a class="back-button" onclick="alert('Added to Cart!')">Add to Cart</a>
+                <a class="back-button" onclick="morelikethis();">More Like This</a>
+                <a href="/" class="back-button">Back to Toy List</a>
+            </div>
+
+        </div>
+    </form>
+    <script>
+
+        function morelikethis() {
+            document.getElementById("hiddendescription").value = document.getElementById("description").innerText;
+            document.getElementById("formcart").submit();
+        }
+
+        let quantity = 1;
+
+        function incrementQuantity() {
+            quantity++;
+            document.getElementById('quantity').textContent = quantity;
+        }
+
+        function decrementQuantity() {
+            if (quantity > 1) {
+                quantity--;
+                document.getElementById('quantity').textContent = quantity;
+            }
+        }
+    </script>
+</body>
+
+</html>
