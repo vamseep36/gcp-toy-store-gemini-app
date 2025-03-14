@@ -29,7 +29,7 @@ public class GeminiCall {
     String image = imageToBase64String(imageBytes);
 
      // Get API key from environment variable
-        String apiKey = Optional.ofNullable(System.getenv("GOOGLE_API_KEY"))
+    String apiKey = Optional.ofNullable(System.getenv("GOOGLE_API_KEY"))
                 .orElseThrow(() -> new IllegalArgumentException("GOOGLE_API_KEY environment variable not set"));
 
 
