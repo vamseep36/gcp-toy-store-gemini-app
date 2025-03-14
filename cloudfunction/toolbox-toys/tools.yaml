@@ -1,14 +1,13 @@
 sources:
     alloydb-toys:
         kind: "alloydb-postgres"
-        project: "YOUR_PROJECT_ID"
-        region: "us-central1"
+        project: "${GOOGLE_CLOUD_PROJECT}"
+        region: "${REGION}"
         cluster: "vector-cluster"
         instance: "vector-instance"
         database: "postgres"
         user: "postgres"
         password: "alloydb"
-        #ipType: "private"
 
 tools:
   get-toy-price:
