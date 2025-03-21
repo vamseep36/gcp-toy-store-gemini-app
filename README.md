@@ -116,7 +116,7 @@ psql -h $PRIMARY_IP -U postgres -d postgres
 
 When prompted, enter the password you specified during the database setup.
 
-#4. Enable Firewall Rules (If Needed)
+# 4. Enable Firewall Rules (If Needed)
 Ensure that the database IP is accessible by creating a firewall rule for the VM to communicate with the database:
 
 ```bash
