@@ -91,6 +91,41 @@ Once your network is set up, you can continue to create your cluster.
 Click <b>CREATE CLUSTER</b> to complete setting up of the cluster.
 Note: Cluster creation will take around 10 minutes. Once it is successful, you should see a screen that shows the overview of your cluster you just created.
 
+# 1. Install PostgreSQL Client on the VM
+Log in to the VM and install the psql client. Here's how to do that:
+
+```bash
+sudo apt update
+sudo apt install postgresql-client
+```
+This installs the PostgreSQL client required to interact with the database.
+
+# 2. Retrieve the Cluster Connection Details
+Run the following command to get the IP address of your AlloyDB primary instance:
+
+```bash
+export PRIMARY_IP=$(gcloud alloydb instances describe my-cluster-primary  --region=us-central1  --format="value(ipAddresses.ipAddress)")
+```
+
+# 3. Connect to the Database
+Use the psql client from your VM to connect to the database:
+
+```bash
+psql -h $PRIMARY_IP -U postgres -d postgres
+```
+
+When prompted, enter the password you specified during the database setup.
+
+#4. Enable Firewall Rules (If Needed)
+Ensure that the database IP is accessible by creating a firewall rule for the VM to communicate with the database:
+
+```bash
+gcloud compute firewall-rules create allow-alloydb-access \
+    --network=default \
+    --allow=tcp:5432 \
+    --source-ranges=$PRIMARY_IP/32
+```
+
 ### 1. CREATE Script
 
 ```sql
